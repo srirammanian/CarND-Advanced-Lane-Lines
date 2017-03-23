@@ -318,9 +318,6 @@ class LaneFinder:
         cv2.line(debug_img, br, bl, (0, 0, 255), 1)
         cv2.line(debug_img, bl, tl, (0, 0, 255), 1)
 
-
-        self.save_frame(debug_img, img_path=file_name + "_birds_eye_debug.jpg")
-
         rect_t = [tl,tr,br,bl]
         rect = np.array(rect_t,dtype="float32")
 
@@ -333,6 +330,13 @@ class LaneFinder:
         self.perspective_matrix = cv2.getPerspectiveTransform(rect, dst)
 
         warped = cv2.warpPerspective(gray, self.perspective_matrix, (1280,720))
+
+
+        # for test/debug purposes
+        self.save_frame(debug_img, img_path=file_name + "_birds_eye_debug.jpg")
+        warped_birds_eye_debug = cv2.warpPerspective(debug_img, self.perspective_matrix, (1280,720))
+        self.save_frame(warped_birds_eye_debug, img_path=file_name + "_birds_eye_debug_warped.jpg")
+
         return warped
 
     #Step 5
@@ -686,8 +690,8 @@ if debug is True:
     l.read_frame(img_path="./test_images/project_video_2.jpg")
     l.read_frame(img_path="./test_images/project_video_3.jpg")
 
-    output = clip1.fl_image(process_frame) #NOTE: this function expects color images!!
-    output.write_videofile('project_video_processed.mp4', audio=False)
+    # output = clip1.fl_image(process_frame) #NOTE: this function expects color images!!
+    # output.write_videofile('project_video_processed.mp4', audio=False)
 else:
     l.save_images = False
 
